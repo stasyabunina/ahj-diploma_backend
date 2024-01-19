@@ -18,7 +18,7 @@ let messages = [{
   created: Date.now(),
   isFavorite: false,
   isPinned: false,
-  file: 'kote-puerto-so5nsYDOdxw-unsplash.jpg'
+  file: 'valentin-muller-vp79HHUIahQ-unsplash.jpg'
 },
 {
   id: uuidv4(),
