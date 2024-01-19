@@ -4,18 +4,84 @@ const Koa = require("koa");
 const koaBody = require("koa-body").default;
 const koaStatic = require("koa-static");
 const fs = require('fs');
+const { v4: uuidv4 } = require('uuid');
 const fsExtra = require('fs-extra');
 const multer = require('@koa/multer');
 const WebSocket = require("ws");
 
 const app = new Koa();
 
-let messages = [];
+let messages = [{
+  id: uuidv4(),
+  author: 'user',
+  type: 'image',
+  created: Date.now(),
+  isFavorite: false,
+  isPinned: false,
+  file: 'kote-puerto-so5nsYDOdxw-unsplash.jpg'
+},
+{
+  id: uuidv4(),
+  author: 'user',
+  type: 'link',
+  created: Date.now(),
+  isFavorite: false,
+  isPinned: false,
+  text: 'https://unsplash.com/s/photos/cat – сайт, с которого взяты все изображения кошек для проекта 🐱'
+},
+{
+  id: uuidv4(),
+  author: 'user',
+  type: 'file',
+  created: Date.now(),
+  isFavorite: false,
+  isPinned: false,
+  file: 'meow.txt',
+  size: 3410
+},
+{
+  id: uuidv4(),
+  author: 'user',
+  type: 'text',
+  created: Date.now(),
+  isFavorite: false,
+  isPinned: false,
+  text: 'В среднем, коты спят по 16-18 часов в день, что составляет более 70% кошачьей жизни.'
+},
+{
+  id: uuidv4(),
+  author: 'user',
+  type: 'video',
+  created: Date.now(),
+  isFavorite: false,
+  isPinned: false,
+  file: 'cat.mp4'
+},
+{
+  id: uuidv4(),
+  author: 'user',
+  type: 'audio',
+  created: Date.now(),
+  isFavorite: false,
+  isPinned: false,
+  file: 'purr.mp3'
+}];
 
 const public = path.join(__dirname, "/public");
 app.use(koaStatic(public));
 
 app.use(async (ctx, next) => {
+  // console.log(ctx.request.method)
+  // if (ctx.request.method === "GET") {
+  //   // ctx.response.set({ ...headers });
+  //   // try {
+  //   //   return await next();
+  //   // } catch (e) {
+  //   //   e.headers = { ...e.headers, ...headers };
+  //   //   throw e;
+  //   // }
+  //   console.log('triggered')
+  // }
   const origin = ctx.request.get("Origin");
   if (!origin) {
     return await next();
@@ -64,7 +130,7 @@ const storage = multer.diskStorage({
     cb(null, file.originalname)
   }
 })
-const upload = multer({storage: storage})
+const upload = multer({ storage: storage })
 
 router.get("/messages", async (ctx, next) => {
   ctx.response.body = JSON.stringify(messages);
@@ -133,8 +199,8 @@ const wsServer = new WebSocket.Server({ server });
 wsServer.on("connection", (ws, req) => {
   ws.on("message", msg => {
     [...wsServer.clients]
-    .filter(o => o.readyState === WebSocket.OPEN)
-    .forEach(o => o.send(JSON.stringify(messages)));
+      .filter(o => o.readyState === WebSocket.OPEN)
+      .forEach(o => o.send(JSON.stringify(messages)));
   });
 });
 
