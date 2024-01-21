@@ -7,7 +7,6 @@ const fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
 const fsExtra = require('fs-extra');
 const multer = require('@koa/multer');
-const WebSocket = require("ws");
 const cors = require('@koa/cors');
 
 const app = new Koa();
@@ -186,15 +185,6 @@ app.use(router.routes()).use(router.allowedMethods());
 
 const port = process.env.PORT || 7070;
 const server = http.createServer(app.callback())
-const wsServer = new WebSocket.Server({ server });
-
-wsServer.on("connection", (ws, req) => {
-  ws.on("message", msg => {
-    [...wsServer.clients]
-      .filter(o => o.readyState === WebSocket.OPEN)
-      .forEach(o => o.send(JSON.stringify(messages)));
-  });
-});
 
 server.listen(port, (err) => {
   if (err) {
