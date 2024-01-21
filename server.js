@@ -8,8 +8,11 @@ const { v4: uuidv4 } = require('uuid');
 const fsExtra = require('fs-extra');
 const multer = require('@koa/multer');
 const WebSocket = require("ws");
+const cors = require('@koa/cors');
 
 const app = new Koa();
+
+app.use(cors());
 
 let messages = [{
   id: uuidv4(),
@@ -42,20 +45,20 @@ let messages = [{
 {
   id: uuidv4(),
   author: 'user',
+  type: 'video',
+  created: Date.now(),
+  isFavorite: false,
+  isPinned: false,
+  file: 'cats.webm'
+},
+{
+  id: uuidv4(),
+  author: 'user',
   type: 'text',
   created: Date.now(),
   isFavorite: false,
   isPinned: false,
   text: 'В среднем, коты спят по 16-18 часов в день, что составляет более 70% кошачьей жизни.'
-},
-{
-  id: uuidv4(),
-  author: 'user',
-  type: 'video',
-  created: Date.now(),
-  isFavorite: false,
-  isPinned: false,
-  file: 'cat.mp4'
 },
 {
   id: uuidv4(),
@@ -71,17 +74,6 @@ const public = path.join(__dirname, "/public");
 app.use(koaStatic(public));
 
 app.use(async (ctx, next) => {
-  // console.log(ctx.request.method)
-  // if (ctx.request.method === "GET") {
-  //   // ctx.response.set({ ...headers });
-  //   // try {
-  //   //   return await next();
-  //   // } catch (e) {
-  //   //   e.headers = { ...e.headers, ...headers };
-  //   //   throw e;
-  //   // }
-  //   console.log('triggered')
-  // }
   const origin = ctx.request.get("Origin");
   if (!origin) {
     return await next();

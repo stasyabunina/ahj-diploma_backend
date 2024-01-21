@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/stasyabunina/rxjs_backend#readme",
   "dependencies": {
+    "@koa/cors": "^5.0.0",
     "@koa/multer": "^3.0.2",
     "forever": "^4.0.3",
     "fs": "^0.0.1-security",
