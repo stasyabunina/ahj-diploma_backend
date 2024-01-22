@@ -20,7 +20,7 @@ let messages = [{
   created: Date.now(),
   isFavorite: false,
   isPinned: false,
-  file: 'valentin-muller-vp79HHUIahQ-unsplash.jpg'
+  file: 'kristin-brown-MJymGVEazyY-unsplash.jpg'
 },
 {
   id: uuidv4(),
@@ -29,7 +29,7 @@ let messages = [{
   created: Date.now(),
   isFavorite: false,
   isPinned: false,
-  text: 'https://unsplash.com/s/photos/cat – сайт, с которого взяты все изображения кошек для проекта 🐱'
+  text: 'https://unsplash.com/s/photos/cat – сайт, с которого взяты все изображения котеек для проекта 🐱'
 },
 {
   id: uuidv4(),
