@@ -8,6 +8,7 @@ const { v4: uuidv4 } = require('uuid');
 const fsExtra = require('fs-extra');
 const multer = require('@koa/multer');
 const cors = require('@koa/cors');
+const ffmpeg = require('ffmpeg');
 
 const app = new Koa();
 
@@ -129,6 +130,33 @@ const upload = multer({ storage: storage })
 
 router.get("/messages", async (ctx, next) => {
   ctx.response.body = JSON.stringify(messages);
+});
+
+router.post("/video-image", async (ctx, next) => {
+  const filename = ctx.request.body.filename;
+
+  try {
+    const process = new ffmpeg(`./public/${filename}`);
+    process.then(function (video) {
+      video.fnExtractFrameToJPG('./public', {
+        frame_rate: 1,
+        number: 1,
+        file_name: `${filename.split('.')[0]}`
+      }, function (error, files) {
+        if (!error) {
+          console.log('Frames: ' + files);
+        }
+      });
+    }, function (err) {
+      console.log('Error: ' + err);
+    });
+  } catch (e) {
+    console.log(e.code);
+    console.log(e.msg);
+  }
+
+  ctx.response.body = JSON.stringify({filename: `${filename.split('.')[0]}.jpg`});
+  ctx.response.status = 200;
 });
 
 router.post("/new-message", async (ctx, next) => {
