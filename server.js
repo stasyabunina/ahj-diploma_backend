@@ -72,7 +72,7 @@ let messages = [{
 
 const public = path.join(__dirname, "/public");
 app.use(koaStatic(public, {
-  setHeaders (res) {
+  setHeaders(res) {
     res.setHeader("accept-ranges", "bytes")
   },
 }));
@@ -83,7 +83,7 @@ app.use(async (ctx, next) => {
     return await next();
   }
 
-  const headers = { "Access-Control-Allow-Origin": "*"};
+  const headers = { "Access-Control-Allow-Origin": "*" };
 
   if (ctx.request.method !== "OPTIONS") {
     ctx.response.set({ ...headers });
@@ -155,7 +155,7 @@ router.post("/video-image", async (ctx, next) => {
     console.log(e.msg);
   }
 
-  ctx.response.body = JSON.stringify({filename: `${filename.split('.')[0]}.jpg`});
+  ctx.response.body = JSON.stringify({ filename: `${filename.split('.')[0]}.jpg` });
   ctx.response.status = 200;
 });
 
@@ -204,8 +204,14 @@ router.post("/search", async (ctx, next) => {
   const str = ctx.request.body.str;
   const searchArr = [];
   for (const message of messages) {
-    if (message.hasOwnProperty('text') && message.text.includes(str)) {
-      searchArr.push(message);
+    if (message.type === 'text' || message.type === 'link') {
+      if (message.text.includes(str)) {
+        searchArr.push(message);
+      }
+    } else if (message.type === 'file') {
+      if (message.file.includes(str)) {
+        searchArr.push(message);
+      }
     }
   }
 
